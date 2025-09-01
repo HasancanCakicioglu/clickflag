@@ -25,13 +25,13 @@ export const useTotalClicksSync = () => {
     const getNextInterval = () => {
       const now = Date.now();
       const intervalMs = 5000; // 5 saniye
-      const nextInterval = Math.ceil(now / intervalMs) * intervalMs;
-      return nextInterval;
+      // Şu anki 5 saniyelik periyodun sonuna kadar bekle + 10ms buffer
+      return Math.floor(now / intervalMs) * intervalMs + intervalMs + 10;
     };
 
     // İlk interval'e kadar bekle, sonra senkronize et
     const nextInterval = getNextInterval();
-    const initialDelay = nextInterval - Date.now();
+    const initialDelay = Math.max(0, nextInterval - Date.now());
     
     //console.log(`🔄 UTC sync: ${initialDelay}ms sonra başlayacak`);
     
