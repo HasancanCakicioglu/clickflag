@@ -71,9 +71,24 @@ export const TopFlags = memo<TopFlagsProps>(({ flagComponents }) => {
     return sortedFlags;
   }, [flagComponents, totalClicks]);
 
-  // Eğer hiç tıklama yoksa gösterme
+  // Eğer hiç tıklama yoksa iskelet görünümü ile yer tut
   if (top3Flags.length === 0 || top3Flags[0].clickCount === 0) {
-    return null;
+    return (
+      <div className="mt-12 sm:mt-12 md:mt-0 lg:mt-4 xl:mt-4">
+        <div className="flex justify-center items-end gap-4 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 mb-2 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-8">
+          {/* 2. sıra placeholder */}
+          <div className="w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-gray-800 rounded animate-pulse" />
+          {/* 1. sıra placeholder (daha büyük) */}
+          <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 bg-gray-800 rounded animate-pulse" />
+          {/* 3. sıra placeholder */}
+          <div className="w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-gray-800 rounded animate-pulse" />
+        </div>
+        {/* Ayraç placeholder */}
+        <div className="flex justify-center pt-1 sm:pt-2 md:pt-3 lg:pt-4 xl:pt-4 pb-4 sm:pb-6 md:pb-8 lg:pb-10 xl:pb-12">
+          <div className="w-11/12 sm:w-10/12 md:w-9/12 lg:w-8/12 xl:w-8/12 h-0.5 sm:h-1 md:h-1 lg:h-1 xl:h-1 bg-gray-700/70"></div>
+        </div>
+      </div>
+    );
   }
 
            return (

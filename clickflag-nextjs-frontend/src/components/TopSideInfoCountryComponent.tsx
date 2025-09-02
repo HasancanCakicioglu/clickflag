@@ -18,45 +18,64 @@ export const TopSideInfoCountryComponent: React.FC = () => {
     currentCountryRef.current = currentCountry;
   }, [currentCountry]);
 
-  // Click handler'ı useCallback ile optimize et - dependency yok
-  const handleClick = useCallback((e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const flagCode = target.closest('[data-flag-code]')?.getAttribute('data-flag-code');
-    
-    if (flagCode) {
-      // Eğer aynı bayrak zaten gösteriliyorsa, sadece timeout yenile
-      const current = currentCountryRef.current;
-      
-      if (current === flagCode) {
-        // Aynı bayrak - timeout yenile
-      } else {
-        // Farklı bayrak - güncelle
-        setCurrentCountry(flagCode);
-      }
-      
-      // Önceki timeout'u temizle
+  // Hover başlatma: mouseover ile ülkeyi göster (üzerindeyken asla kapanmaz)
+  const handleMouseOver = useCallback((e: MouseEvent) => {
+    const target = e.target as HTMLElement | null;
+    const flagEl = target?.closest('[data-flag-code]') as HTMLElement | null;
+    const flagCode = flagEl?.getAttribute('data-flag-code');
+
+    if (!flagCode) return;
+
+    const current = currentCountryRef.current;
+
+    // Farklı bir bayrağa gelindiyse anında değiştir
+    if (current !== flagCode) {
+      setCurrentCountry(flagCode);
+    }
+
+    // Kapanma zamanlayıcısı varsa iptal et (üzerindeyken kapanmasın)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
+
+  // Mouseout: bayraktan tamamen çıkınca 3 sn sonra gizle
+  const handleMouseOut = useCallback((e: MouseEvent) => {
+    const fromTarget = e.target as HTMLElement | null;
+    const toTarget = (e as MouseEvent).relatedTarget as HTMLElement | null;
+    const fromFlagEl = fromTarget?.closest('[data-flag-code]');
+    const toFlagEl = toTarget?.closest?.('[data-flag-code]') ?? null;
+
+    // Aynı bayrak içinde veya bir başka bayrağa geçişte gizleme başlatma
+    if ((fromFlagEl && toFlagEl) || (fromFlagEl && toFlagEl === fromFlagEl)) {
+      return;
+    }
+
+    // Bayrak alanından tamamen çıkıldıysa 3 sn sonra gizle
+    if (fromFlagEl && !toFlagEl) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      
-      // Yeni timeout başlat
       timeoutRef.current = setTimeout(() => {
         setCurrentCountry(null);
         timeoutRef.current = null;
       }, 3000);
     }
-  }, []); // ← Hiç dependency yok!
+  }, []);
 
-  // Event listener'ı sadece bir kez ekle
+  // Event listener'ları sadece bir kez ekle (hover davranışı)
   useEffect(() => {
-    document.addEventListener('click', handleClick);
+    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('mouseout', handleMouseOut);
     return () => {
-      document.removeEventListener('click', handleClick);
+      document.removeEventListener('mouseover', handleMouseOver);
+      document.removeEventListener('mouseout', handleMouseOut);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [handleClick]);
+  }, [handleMouseOver, handleMouseOut]);
 
   // Görünür değilse hiçbir şey render etme
   if (!currentCountry) {

@@ -1,4 +1,7 @@
 // API Configuration
+
+//http://localhost:8080
+//https://api.clickflag.com
 export const API_CONFIG = {
   BASE_URL: 'https://api.clickflag.com',
   TIMEOUT: 3000, // 10 saniye
