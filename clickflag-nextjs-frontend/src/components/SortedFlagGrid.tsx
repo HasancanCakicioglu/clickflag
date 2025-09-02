@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useEffect, useRef } from 'react';
 import { FlagComponent } from '@/components/FlagComponent';
 import { useTotalClicksStore, useMyClicksStore } from '@/store';
 import { apiService } from '@/services/api';
@@ -60,6 +60,18 @@ export const SortedFlagGrid = memo<SortedFlagGridProps>(({ flagComponents }) => 
   const incrementTotalClick = useTotalClicksStore((state) => state.increment);
   const { createEmoji } = useEmojiAnimation();
 
+  // Tıklama sesi
+  const clickAudioRef = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    const audio = new Audio('/click-sound.mp3');
+    audio.preload = 'auto';
+    audio.volume = 0.4; 
+    clickAudioRef.current = audio;
+    return () => {
+      clickAudioRef.current = null;
+    };
+  }, []);
+
   const handleFlagClick = (countryCode: string) => {
     //console.log('🟣 Flag tıklandı:', countryCode);
     
@@ -70,6 +82,16 @@ export const SortedFlagGrid = memo<SortedFlagGridProps>(({ flagComponents }) => 
     // API'ye POST isteği gönder (fire and forget)
     apiService.postCountryClick(countryCode);
     
+    // Tıklama sesini çal
+    try {
+      const audio = clickAudioRef.current;
+      if (audio) {
+        // Art arda tıklamalarda başa sar
+        audio.currentTime = 0;
+        void audio.play();
+      }
+    } catch {}
+
     // Emoji oluştur
     //console.log('🟣 createEmoji çağrılıyor...');
     createEmoji();

@@ -3,7 +3,7 @@
 //http://localhost:8080
 //https://api.clickflag.com
 export const API_CONFIG = {
-  BASE_URL: 'https://api.clickflag.com',
+  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.clickflag.com',
   TIMEOUT: 3000, // 10 saniye
   RETRY_ATTEMPTS: 3,
 };
