@@ -32,13 +32,17 @@ export const useTotalClicksStore = create<TotalClicksStore>((set, get) => ({
     };
   }),
   
-  setBulk: (data) => set(() => {
-    // Yeni total'i hesapla
-    const newTotal = Object.values(data).reduce((sum, count) => sum + count, 0);
+  setBulk: (data) => set((state) => {
+    // Önceki total ile yeni total'i karşılaştır
+    const oldTotal = state.total;
+    const newDataTotal = Object.values(data).reduce((sum, count) => sum + count, 0);
+    
+    // Yeni veri daha azsa, farkı total'e ekle (veri kaybını önle)
+    const totalDifference = Math.max(0, oldTotal - newDataTotal);
     
     return {
       clicks: data,
-      total: newTotal
+      total: newDataTotal + totalDifference
     };
   }),
   
