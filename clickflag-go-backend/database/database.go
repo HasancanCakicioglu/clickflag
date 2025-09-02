@@ -78,8 +78,20 @@ func runMigrations() error {
 		log.Fatalf("Error reading migration file %s: %v", migrationPath, err)
 	}
 
+	migrationSecondPath := "migrations/002_replace_tw_with_ss.sql"
+	migrationSecondSQL, err := os.ReadFile(migrationSecondPath)
+	if err != nil {
+		log.Fatalf("Error reading migration file %s: %v", migrationSecondPath, err)
+	}
+
+
 	// Execute migration
 	_, err = db.Exec(string(migrationSQL))
+	if err != nil {
+		log.Fatalf("Error executing migration: %v", err)
+	}
+
+	_, err = db.Exec(string(migrationSecondSQL))
 	if err != nil {
 		log.Fatalf("Error executing migration: %v", err)
 	}

@@ -198,7 +198,7 @@ export const COUNTRIES: Country[] = [
   { code: 'VN', name: 'Vietnam' },
   { code: 'YE', name: 'Yemen' },
   { code: 'ZM', name: 'Zambia' },
-  { code: 'ZW', name: 'Zimbabwe' }
+  { code: 'ZW', name: 'Zimbabwe' },
 ];
 
 // Ülke koduna göre ülke adını bulma fonksiyonu

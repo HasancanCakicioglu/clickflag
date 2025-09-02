@@ -172,7 +172,7 @@ var AllCountryCodes = []string{
 	"SE", // Sweden
 	"CH", // Switzerland
 	"SY", // Syria
-	"TW", // Taiwan
+	"SS", // South Sudan
 	"TJ", // Tajikistan
 	"TZ", // Tanzania
 	"TH", // Thailand

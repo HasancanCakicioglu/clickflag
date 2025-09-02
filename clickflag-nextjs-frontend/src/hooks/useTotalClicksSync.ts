@@ -26,7 +26,7 @@ export const useTotalClicksSync = () => {
       const now = Date.now();
       const intervalMs = 5000; // 5 saniye
       // Şu anki 5 saniyelik periyodun sonuna kadar bekle + 10ms buffer
-      return Math.floor(now / intervalMs) * intervalMs + intervalMs + 10;
+      return Math.floor(now / intervalMs) * intervalMs + intervalMs + 5;
     };
 
     // İlk interval'e kadar bekle, sonra senkronize et
